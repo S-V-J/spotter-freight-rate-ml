@@ -32,3 +32,4 @@ backend/uploads/*.xlsx
 backend/uploads/*.png
 backend/outputs/
 frontend-url.txt
+*.db
