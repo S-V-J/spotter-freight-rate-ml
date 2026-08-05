@@ -12,6 +12,15 @@
 
 ---
 
+## 📚 Documentation
+
+This repository contains comprehensive documentation to help you understand, deploy, and maintain the platform:
+- **[README.md](README.md)**: Project overview, core capabilities, and quick start guide *(You are here)*.
+- **[INTRODUCTION.md](INTRODUCTION.md)**: Executive summary, the problem we solve, and the Spotter solution philosophy.
+- **[INSTALL.md](INSTALL.md)**: Comprehensive deployment, local development, maintenance, and troubleshooting guide for system administrators.
+
+---
+
 ## Core Capabilities
 
 - **Smart File Manager**: Modern drag-and-drop uploads paired with an inline Data Inspector that automatically parses CSV/JSON/Excel files, detects missing values, and recommends the correct pipeline step based on schema analysis.
@@ -22,20 +31,39 @@
 
 ---
 
+## 🏗️ Project Structure
+
+```text
+spotter-webapp/
+├── backend/                 # FastAPI application, ML logic, and Dockerfile
+│   ├── app/                 # Core application logic (routers, models, schemas, core)
+│   └── requirements.txt     # Python dependencies
+├── frontend/                # Next.js 16 application and Dockerfile
+│   └── src/                 # React components, pages, contexts, and API clients
+├── docker-compose.yml       # Orchestrates backend and frontend services
+├── Makefile                 # Centralized command runner for dev, ops, and ML pipelines
+├── INSTALL.md               # Comprehensive deployment and maintenance guide
+├── INTRODUCTION.md          # Executive summary, problem statement, and solution overview
+├── README.md                # Project overview, features, and quick start
+└── LICENSE                  # MIT License
+```
+
+---
+
 ## Technology Stack
 
 | Layer | Technologies |
 | :--- | :--- |
 | **Frontend** | Next.js 16 (App Router), React 18, Tailwind CSS, Lucide Icons, Recharts |
 | **Backend** | Python 3.11, FastAPI, Pydantic, Uvicorn, Pandas, Scikit-Learn, LightGBM |
-| **Infrastructure** | Docker, Docker Compose, systemd (Dynamic Port Allocation) |
+| **Infrastructure** | Docker, Docker Compose, systemd (Dynamic Port Allocation), Make |
 | **Persistence** | Local Docker Volumes (Ensures data survival across container restarts) |
 
 ---
 
-## Quick Start
+## 🚀 Quick Start
 
-The most reliable way to run the entire platform is via Docker Compose. This handles both the FastAPI backend and the Next.js frontend in isolated, optimized containers.
+The most reliable way to run the entire platform is via Docker Compose and the provided `Makefile`. This handles both the FastAPI backend and the Next.js frontend in isolated, optimized containers.
 
 ### 1. Clone the Repository
 ```bash
@@ -44,10 +72,11 @@ cd spotter-freight-rate-ml/spotter-webapp
 ```
 
 ### 2. Start the Application
+We provide a `Makefile` to simplify Docker operations. Run:
 ```bash
-# Build and start all services in detached mode
-sudo docker-compose up -d --build
+make start
 ```
+*(Alternatively, you can run `sudo docker compose up -d --build` directly).*
 
 ### 3. Access the Platform
 - **Frontend UI**: Open your browser and navigate to `http://localhost:3005` (or the port specified in `frontend-url.txt`)
@@ -59,35 +88,49 @@ sudo docker-compose up -d --build
 
 ---
 
-## Local Development
+## 💻 Local Development
 
-If you prefer to run the services natively for active development:
+If you prefer to run the services natively for active development and hot-reloading, the `Makefile` has you covered:
 
-### Backend (FastAPI)
+### 1. Install Dependencies
 ```bash
-cd backend
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8001
+make setup
 ```
+*(This creates a Python virtual environment in `backend/` and runs `npm install` in `frontend/`)*
 
-### Frontend (Next.js)
+### 2. Start the Backend
+Open a terminal and run:
 ```bash
-cd frontend
-npm install
-npm run dev
-# The custom start script will automatically find a free port (e.g., 3003)
+make dev-backend
 ```
+*(Runs on `http://127.0.0.1:8001`)*
+
+### 3. Start the Frontend
+Open a **second** terminal and run:
+```bash
+make dev-frontend
+```
+*(The custom startup script will automatically find an available port, typically `3003` or `3000`)*
 
 ---
 
-## UI Showcase
+## 🧠 Running the ML Pipeline
 
-*(Note: Add screenshots of your app here before pushing to GitHub)*
-- **Smart File Manager**: Inline data inspection with missing value detection and schema recommendations.
-- **Pipeline Wizard**: Step-by-step file selection with real-time schema validation and locked progression.
-- **Model Insights**: Live MAE/RMSE metrics and horizontal bar charts for feature importance.
+The platform includes built-in commands to execute the machine learning workflow directly inside the backend container:
+
+### 1. Train the Model
+Generates predictions, saves model artifacts, and updates the December chart inputs:
+```bash
+make train
+```
+
+### 2. Run the Official Scorer
+Validates the generated predictions against the December chart inputs and generates the final chart:
+```bash
+make score
+```
+
+*Note: You can also trigger both of these workflows directly from the Frontend UI via the Dashboard.*
 
 ---
 
