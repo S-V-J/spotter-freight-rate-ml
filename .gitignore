@@ -33,3 +33,5 @@ backend/uploads/*.png
 backend/outputs/
 frontend-url.txt
 *.db
+validation_predictions.csv
+candidate_december.png
