@@ -1,0 +1,44 @@
+services:
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: spotter-backend
+    ports:
+      - "8001:8001"
+    environment:
+      - SECRET_KEY=your-super-secret-production-key-change-this
+      # Point to the persistently mounted database
+      - DATABASE_URL=sqlite:////app/db/spotter.db
+    volumes:
+      - ../src:/app/src
+      - ../data:/app/data
+      - ../score.py:/app/score.py
+      - ./backend/uploads:/app/uploads
+      - ./backend/outputs:/app/outputs
+      # Mount the persistent database directory
+      - ./backend/db:/app/db
+    restart: always
+    networks:
+      - spotter-net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: runner
+    container_name: spotter-frontend
+    ports:
+      - "3005:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8001
+    depends_on:
+      - backend
+    restart: always
+    networks:
+      - spotter-net
+
+networks:
+  spotter-net:
+    driver: bridge

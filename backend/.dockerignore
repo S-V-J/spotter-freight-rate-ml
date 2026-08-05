@@ -1,0 +1,14 @@
+.venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.db
+.git/
+.idea/
+.vscode/
+.env
+.env.local
+uploads/
+outputs/
+*.log
